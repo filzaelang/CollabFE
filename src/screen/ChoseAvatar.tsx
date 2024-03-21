@@ -21,7 +21,7 @@ import { InputSlot } from "@gluestack-ui/themed";
 import { InputIcon } from "@gluestack-ui/themed";
 import { SearchIcon } from "@gluestack-ui/themed";
 import { InputField } from "@gluestack-ui/themed";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import { ButtonText } from "@gluestack-ui/themed";
 import { Link } from "@gluestack-ui/themed";
 import { LayoutBg } from "../Layout/LayoutBg";
@@ -32,20 +32,20 @@ import { SET_EMAIL, SET_AVATAR, SET_USERNAME } from "../store/slices/userSlices"
 
 export const ChoseAvatar = ({ navigation }: any) => {
   const [hoveredItemId, setHoveredItemId] = useState(null);
+  const [selectAvatar, setSelectAvatar] = useState<number>(0);
   const dispatch = useDispatch();
   const { isLoaded, isSignedIn, user } = useUser();
 
+  const hendelAvatar = (id: number) => {
+    setSelectAvatar(id);
+  };
+
   useEffect(() => {
     if (isLoaded && isSignedIn) {
-      // Use map to get an array of email addresses
-      const emailAddresses = user.emailAddresses.map(emailAddress => emailAddress.emailAddress);
-
-      // Assuming you want to set the first email address, modify this part as needed
-      if (emailAddresses.length > 0) {
-        dispatch(SET_EMAIL(emailAddresses[0]))
-      }
+      const email = user.emailAddresses[0].emailAddress
+      dispatch(SET_EMAIL(email))
     }
-  }, [isLoaded, isSignedIn, user!.emailAddresses]);
+  }, [isLoaded, isSignedIn]);
 
   return (
     <View style={{ width: "100%", height: "100%" }}>
@@ -72,11 +72,31 @@ export const ChoseAvatar = ({ navigation }: any) => {
                 >
                   {avatarReguler.map((item: any) => (
                     <TouchableOpacity
-                      onPress={() => dispatch(SET_AVATAR(item.avatar))}
+                      onPress={() => {
+                        dispatch(SET_AVATAR(item.avatar));
+                        hendelAvatar(item.id);
+                      }}
                       key={item.id}
                       onPressIn={() => setHoveredItemId(item.id)}
-                      onPressOut={() => setHoveredItemId(null)}
+                      onPressOut={() => {
+                        setHoveredItemId(null);
+                        setSelectAvatar(0);
+                      }}
                     >
+                      {selectAvatar === item.id && (
+                        <Box
+                          position="absolute"
+                          bottom={0}
+                          right={0}
+                          zIndex={1}
+                        >
+                          <AntDesign
+                            name="checkcircle"
+                            size={24}
+                            color="#59B4DD"
+                          />
+                        </Box>
+                      )}
                       <Avatar size="lg" borderRadius="$full">
                         <AvatarImage
                           alt="avatar"

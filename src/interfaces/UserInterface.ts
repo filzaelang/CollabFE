@@ -5,3 +5,9 @@ export interface IUser {
     avatar?: string | undefined,
     diamond?: number,
 }
+
+export interface IUsersLoby {
+    id: string;
+    username: string;
+    room: string;
+}

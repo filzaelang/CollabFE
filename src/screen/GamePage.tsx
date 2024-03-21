@@ -1,5 +1,5 @@
 import { Center, Text } from "@gluestack-ui/themed";
-import { Box } from "@gluestack-ui/themed";
+import { Box, AvatarImage } from "@gluestack-ui/themed";
 import React, { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -8,14 +8,17 @@ import { HStack } from "@gluestack-ui/themed";
 import { QuisJson } from "../json/Quis";
 import { Progress } from "@gluestack-ui/themed";
 import { ProgressFilledTrack } from "@gluestack-ui/themed";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from "../store/types/rootTypes";
 
 export const GamePage = ({ navigation }: any) => {
+    const user = useSelector((state: RootState) => state.user.data)
     const [questionIndex, setQuestionIndex] = useState(0);
     const [answered, setAnswered] = useState(false);
-
     const [selectedOption, setSelectedOption] = useState(null); // Menambahkan state untuk menyimpan jawaban yang dipilih
-
     const Questions = QuisJson[questionIndex];
+    const QuestLength = QuisJson.length;
+    const [questionLength, setQuestionLength] = useState<number>(1)
 
     const hendelAnswer = (question: string, index: any) => {
         setSelectedOption(index); // Menyimpan jawaban yang dipilih
@@ -26,11 +29,16 @@ export const GamePage = ({ navigation }: any) => {
             setAnswered(false);
         }
     };
+
     const handleNextQuestion = () => {
         setSelectedOption(null); // Reset pilihan jawaban
         setAnswered(false);
-        setQuestionIndex((prevIndex) => prevIndex + 1);
-        // navigation.navigate("Champion");
+        setQuestionLength(prevLength => prevLength + 1);
+        if (questionLength == QuestLength) {
+            navigation.navigate("Champion");
+        } else {
+            setQuestionIndex((prevIndex) => prevIndex + 1);
+        }
     };
 
     return (
@@ -106,24 +114,62 @@ export const GamePage = ({ navigation }: any) => {
                                         mt={30}
                                         w={"85%"}
                                         h={40}
+
+                                        px={14}
                                         justifyContent="center"
                                         borderRadius={10}
+                                        // bg="#fff"
                                         bg={
                                             selectedOption === index
                                                 ? Questions.answer === question
-                                                    ? "#52A6CD"
-                                                    : "red"
+                                                    ? "#fff"
+                                                    : "#fff"
                                                 : "#fff"
                                         }
                                     >
                                         <Text
-                                            color={selectedOption === index ? "white" : "black"}
-                                            fontSize={"$lg"}
+                                            width={"100%"}
+                                            color={selectedOption === index ? "black" : "black"}
+                                            fontSize={"$md"}
                                             fontWeight="bold"
-                                            textAlign="center"
+                                            textAlign="left"
                                         >
                                             {question}
                                         </Text>
+
+                                        {selectedOption === index && (
+                                            <Box width={"60%"} height={30} display="flex" gap={35} flexDirection="row" position="absolute" justifyContent="flex-end" right={10}>
+                                                <Box>
+                                                    <AvatarImage
+                                                        alt="avatar"
+                                                        width={30}
+                                                        height={30}
+                                                        source={require("../../assets/avatar/avatar4.jpg")}
+                                                    />
+
+                                                </Box>
+                                                <Box >
+                                                    <AvatarImage
+                                                        alt="avatar"
+                                                        width={30}
+                                                        height={30}
+                                                        source={require("../../assets/avatar/avatar4.jpg")}
+                                                    />
+
+                                                </Box>
+                                                <Box mr={20}>
+                                                    <AvatarImage
+                                                        alt="avatar"
+                                                        width={30}
+                                                        height={30}
+                                                        source={require("../../assets/avatar/avatar4.jpg")}
+                                                    />
+
+                                                </Box>
+
+                                            </Box>
+
+                                        )}
                                     </Box>
                                 </TouchableOpacity>
                             ))}
@@ -144,6 +190,6 @@ export const GamePage = ({ navigation }: any) => {
                     </Box>
                 </Box>
             </LayoutBg>
-        </View>
+        </View >
     );
 };

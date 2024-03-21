@@ -10,20 +10,35 @@ import {
   Link,
   Pressable,
 } from "@gluestack-ui/themed";
-import { InputSlot } from "@gluestack-ui/themed";
-import { InputField } from "@gluestack-ui/themed";
-import { Box, ImageBackground, Text } from "@gluestack-ui/themed";
-import React from "react";
+import { Box, Text } from "@gluestack-ui/themed";
+import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ImageLogo } from "../components/Image";
 import { LayoutBg } from "../Layout/LayoutBg";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "../store/types/rootTypes";
+import { ToastAndroid } from 'react-native';
+import { SET_SIZE } from "../store/slices/sizeRoomSlices";
+import { SET_USERS_ROOM } from "../store/slices/usersInRoomSlices";
+import socket from "../utils/socket";
+
 
 export const Home = ({ navigation }: any) => {
   const user = useSelector((state: RootState) => state.user.data)
+  const roomSize = useSelector((state: RootState) => state.sizeRoom.size);
+  const usersInRoom = useSelector((state: RootState) => state.usersInRoom.data)
+  const dispatch = useDispatch();
+  console.log("roomSize", roomSize)
+
+  async function startGame() {
+    try {
+      navigation.navigate("MatchPage")
+    } catch (error) {
+      alert("Network error")
+    }
+  }
 
   return (
     <View style={{ width: "100%", height: "100%", minHeight: "100%" }}>
@@ -124,7 +139,7 @@ export const Home = ({ navigation }: any) => {
             h={250}
           ></Image>
           <Button bg="#59B4DD" w={"40%"} borderRadius={"$xl"} mt={-20}>
-            <TouchableOpacity onPress={() => navigation.navigate("MatchPage")}>
+            <TouchableOpacity onPress={startGame}>
               <ButtonText>Start Game</ButtonText>
             </TouchableOpacity>
           </Button>

@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "NativDasar",
+    "scheme": "NativDasar",
     "slug": "NativDasar",
     "version": "1.0.0",
     "orientation": "portrait",

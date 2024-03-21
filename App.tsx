@@ -10,6 +10,8 @@ import rootReducer from "./src/store/rootReducer";
 import { configureStore } from '@reduxjs/toolkit'
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Constants from "expo-constants"
+import React, { useEffect } from 'react';
+import socket from "./src/utils/socket";
 
 const store = configureStore({
   reducer: rootReducer,
@@ -51,6 +53,11 @@ const SignOut = () => {
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+
+  useEffect(() => {
+    socket.on("connect", () => { });
+  }, []);
+
   return (
     <ClerkProvider
       tokenCache={tokenCache}
