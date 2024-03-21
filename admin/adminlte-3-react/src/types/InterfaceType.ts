@@ -13,8 +13,8 @@ export interface DiamonType {
 }
 
 export interface QuizType {
-  id: number;
+  id?: number;
   question: string;
   answer: string;
-  options: [];
+  options: string[]; // Perbaiki tipe data options menjadi string[]
 }

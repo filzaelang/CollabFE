@@ -1,48 +1,75 @@
+import { API } from "@app/lib/axios";
+import { QuizType } from "@app/types/InterfaceType";
 import React, { useState } from "react";
 
 export const AddQuiz = () => {
-  const [dataQuiz, setDataQuiz] = useState({
-
+  const [dataQuiz, setDataQuiz] = useState<QuizType>({
+    question: "",
+    answer: "",
+    options: [],
   });
+  console.log(dataQuiz.options);
+  const hendelSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const response = await API.post("/quizzes", dataQuiz);
+      console.log(response.data);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div>
       <h1 className="text-gray-800 ml-2">Add Quiz</h1>
-      <form action="/avatar/create" method="POST" encType="multipart/form-data">
+      <form method="POST" onSubmit={hendelSubmit}>
         <div className="card-body">
           <div className="form-group">
-            <label htmlFor="avatar_name">Masukan nama avatar</label>
+            <label htmlFor="question">Masukan nama question</label>
             <input
               type="text"
-              name="avatar_name"
+              name="question"
               className="form-control"
-              id="avatar_name"
-              placeholder="masukan nama avatar"
+              id="question"
+              placeholder="masukan question"
               required
+              onChange={(e) => {
+                setDataQuiz({ ...dataQuiz, question: e.target.value });
+              }}
             />
           </div>
         </div>
         <div className="card-body">
           <div className="form-group">
-            <label htmlFor="image">Masukan image</label>
+            <label htmlFor="answer">Masukan Answer</label>
             <input
-              type="file"
-              name="image"
+              type="text"
+              name="answer"
               className="form-control"
-              id="image"
-              placeholder="masukan nama image"
+              id="answer"
+              placeholder="masukan nama answer"
               required
+              onChange={(e) => {
+                setDataQuiz({ ...dataQuiz, answer: e.target.value });
+              }}
             />
           </div>
         </div>
         <div className="card-body">
           <div className="form-group">
-            <label htmlFor="price">Masukan harga</label>
+            <label htmlFor="options">Masukan options Jawaban []</label>
             <input
-              type="number"
-              name="price"
+              type="text"
+              name="options"
               className="form-control"
-              id="price"
-              placeholder="masukan nama harga"
+              id="options"
+              onChange={(e) => {
+                setDataQuiz({
+                  ...dataQuiz,
+                  options: e.target.value.split(","),
+                }); // Memisahkan nilai string menjadi array
+              }}
+              placeholder="masukan options"
               required
             />
           </div>
@@ -52,7 +79,7 @@ export const AddQuiz = () => {
             <i className="fas fa-save"></i> Simpan
           </button>
           <button type="submit" className="btn btn-secondary ml-3">
-            <a href="/avatar" style={{ color: "white" }}>
+            <a href="/quiz" style={{ color: "white" }}>
               <i className="fa fa-undo"></i> Cancel
             </a>
           </button>

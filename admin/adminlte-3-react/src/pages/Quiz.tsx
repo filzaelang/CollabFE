@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 export const Quiz = () => {
   const naviget = useNavigate();
-  const { hendelGetQuiz } = useQuiz();
+  const { hendelGetQuiz, hendelDeleteQuiz } = useQuiz();
   const dataQuiz = useSelector((state: RootType) => state.quiz.data.data);
   useEffect(() => {
     hendelGetQuiz();
@@ -48,7 +48,14 @@ export const Quiz = () => {
                     ))}
                   </ol>
                 </td>
-                <td>action</td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => hendelDeleteQuiz(quiz.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

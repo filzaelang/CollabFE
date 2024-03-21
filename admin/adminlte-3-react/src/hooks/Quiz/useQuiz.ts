@@ -14,7 +14,18 @@ export const useQuiz = () => {
     }
   };
 
+  const hendelDeleteQuiz = async (id: any) => {
+    try {
+      const response = await API.delete(`/quizzes/${id}`);
+      hendelGetQuiz();
+      window.location.reload();
+      response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     hendelGetQuiz,
+    hendelDeleteQuiz,
   };
 };
